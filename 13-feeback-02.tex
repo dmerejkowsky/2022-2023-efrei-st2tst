@@ -1,0 +1,211 @@
+---
+title: Part 13 - Second workshop feedback
+author: Dimitri Merejkowsky
+date: EFREI 2022-2023
+---
+
+# Ohce Feedback
+
+Let's see various solutions
+
+##
+
+```diff
+-  greet () {
+-    const currentHour = this.clock.currentHour()
+-    if (currentHour >= 6 ...) {
+-    // ..
+-  }
++  greet (currentHour)
++    if (currentHour >= 6 ...) {
++    // ..
++  }
+```
+
+Split pure functions and IO
+
+This is a central idea in languages like Haskell :)
+
+## Same idea
+
+`mainLoop()` does all the I/O
+
+```javascript
+class Interactor
+  mainLoop() {
+   while(true) {
+     const input = this.readInput();
+     const { output, keepGoing } = \
+       this.handleInputLogic(input);
+     if (!keepGoing) {
+        return False
+     }
+     this.printMessage(output)
+  }
+}
+```
+##
+
+`handleInputLogic()` is all computation, no side effects
+
+```javascript
+handleInputLogic(input) {
+  if (input === 'quit') {
+    return { keepGoing: false }
+  }
+  const reversed = reverse(input)
+  if (input === reversed) {
+    return {
+      keepGoing: true,
+      output: reversed + " That was a palindrome"
+    }
+  }
+  else {
+    return {
+      keepGoing: true,
+      output: reversed
+    }
+  }
+}
+```
+
+## Monkey patch
+
+```python
+def returns_0( ):
+    return 0
+
+def test_nightly_greeting():
+    """
+    Assert that greeter says "Good night" at midnight
+    (when current hour is 0)
+    """
+    greeter = Greeter()
+    greeter.clock.current_hour = returns_0
+    assert g.greet() == "Good night"
+```
+
+\vfill
+
+Technique worth to know about, but use it in last resort.
+
+## Monkey patch with jest
+
+```javascript
+const greeter = new Greeter()
+jest
+  .spyOn(greeter.clock, 'currentHour')
+  .mockReturnValue(0)
+expect(greeter.greet()).toBe('Good night')
+```
+
+\vfill
+
+A little bit better :)
+
+##
+
+Some of you redirected stdin and stout to test the UI.
+
+This is also a neat trick :)
+
+## Nope
+
+```python
+class SystemClock:
+    def current_hour(self):
+        now = datetime.now()
+        return now.hour
+    def current_hour(self, hour=None):
+        if hour != None :
+            now = hour
+        else:
+            now = datetime.now().hour
+        return now
+```
+
+You have production code and test code in the same class!
+
+
+## Stil nope
+
+
+```python
+class SystemClock:
+    def __init__(self, current_hour=None):
+        self._hour = current_hour
+
+    def current_hour(self):
+        if self._hour is not None:
+            return self._hour
+        else:
+            return datetime.now().hour
+```
+
+Building a `SystemClock` with a pre-defined hour
+makes no sense.
+
+## Almost there ...
+
+```cs
+public interface GiveHour
+{
+  public int GetCurrentHour();
+}
+
+public class Return_9_Oclock : GiveHour {
+  public int GetCurrentHour()
+  {
+     return 9;
+  }
+}
+```
+
+##
+
+```cs
+Greeter greet = new Greeter(new Return_9_Oclock());
+Assert.That(greet.Greet(), Is.EqualTo("Good morning"));
+```
+
+
+## A brand new test class
+
+```javascript
+const FakeSystemClock {
+  constructor(hour) {
+    this.hour = hour
+  }
+
+  currentHour() {
+    return this.hour
+  }
+}
+```
+
+Now we have a class for all our testing needs
+
+## And then..
+
+Just a tiny change in the constructor:
+
+```diff
+class Greeter {
+-  constructor() {
+-     this.clock = new SystemClock()
+-  }
++  constructor (clock = new SystemClock()) {
++    this.clock = clock
++ }
+```
+
+\vfill
+
+```javascript
+test('midnight', (t) => {
+  const fakeClock = new FakeSystemClock(0);
+  const greeter = new Greeter(clock=fakeClock})
+
+  t.equal(greeter.greet(), "Good night")
+})
+```

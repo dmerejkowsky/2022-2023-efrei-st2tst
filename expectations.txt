@@ -1,0 +1,40 @@
+properly test code
+
+organize test code
+
+testing guis
+  testing web apps
+  demo!
+
+creating tests is "a waste of time"
+promote testing
+
+TDD
+
+multiple languages
+
+Why and when use testsmock, spy, injection
+new ways of testing
+  - mutation
+  - fuzz
+  - ...mock, spy, injection
+quality test code
+
+full-stack project
+  - ci/cd
+
+tricky and common mistakes in testing
+
+how to test microservices?
+ - train reservation?
+
+mock, spy, injection
+
+BDD
+
+Demo TDD
+
+
+---
+
+TD: write the test that's going to show the bug

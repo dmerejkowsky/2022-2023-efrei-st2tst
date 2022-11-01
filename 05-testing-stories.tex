@@ -1,0 +1,173 @@
+---
+title: Part 5 - Testing stories
+author: Dimitri Merejkowsky
+date: EFREI 2022-2023
+---
+
+
+# Testing stories
+
+## Tanker
+
+* End-to-end encryption
+* SDK available for iOS, Android, Linux, Mac, Windows, Javascript
+* Stack:
+   * GoLang for server
+   * C++ for core "native" SDK
+   * Javascript for Web SDK
+
+##
+
+![](img/tanker.png)
+
+## Testing strategy
+
+* Test suite in C++ for the native SDK
+* Test suite in Javascript for the Javascript SDK
+* Both use the server deployed in the `dev` environment
+
+## Question
+
+How do we check that C++ and Javascript code do the same thing?
+
+## test vectors (1)
+
+Just hard-code the input and output, making sure
+the values are the same
+
+**C++**
+
+```c++
+auto const input    = base64::decode(
+    "COnKYqlvjWxI33URJj0omXstJu3uLcmmqNmwSxNePAA="
+);
+auto const expected = base64::decode(
+    "Pnpjub2uwkBDpt2HUieWOXP5xLn0Zlen16ID4C7jI=",
+);
+check_b64_decrypt(input, expected);
+```
+
+## test vectors (2)
+
+**JavaScript**
+
+
+```javascript
+const input    = b64Decode(
+    "COnKYqlvjWxI33URJj0omXstJu3uLcmmqNmwSxNePAA="
+)
+const expected = b64Decode(
+    "Pnpjub2uwkBDpt2HUieWOXP5xLn0Zlen16ID4C7jI="
+)
+checkB64Decrypt(input, expected)
+```
+
+## e2e tests (1)
+
+* Wrap C++ code in Python to get a Python SDK
+* Write a server using msgpack using the Python SDK
+* Write a Javascript client using msgpack
+
+## e2e tests (2)
+
+![](img/tanker-e2e.png)
+
+## e2e tests (3)
+
+```javascript
+const testServer = new TestServer()
+
+test("encrypt js, decrypt native", () => {
+    const message = 'hello'
+    const encrypted = tanker.encrypt('hello')
+    const msg = {"decrypt", encrypted }
+    const response =  testServer.call(msg)
+    expect(response).to.eq(message)
+});
+```
+
+
+## Question
+
+How do we check that the server is backward-compatible?
+
+## Retro-compat tests (1)
+
+
+```text
+retro-compat-tests/
+   tanker-v1.0/
+     tests.js
+   tanker-v1.2/
+     tests.js
+   tanker-v2.0/
+     tests.js
+ ```
+
+## Retro-compat tests (2)
+
+We start the sever on localhost
+
+ For each folder we:
+
+ * Install the public JS SDK matching the version
+ * Run all the test suites by connecting to localhost
+   instead of the `dev` environment
+
+## Question
+
+How do we check that the SDK is backward-compatible?
+
+## Upgrade tests
+
+For each tuple (v1, v2)
+
+* Encrypt in v1 - store state
+* Load state
+* Decrypt in v2
+
+\vfill
+
+Yes, this is $O(n^2)$ !
+
+## Why test so hard?
+
+Did not have a choice!
+
+:::incremental
+* Bug during upgrade => data loss
+* Retro-compat broken => data loss
+* Upgrade broken => data loss
+:::
+
+# Moral of the stories
+
+
+## Writing a test
+
+3 questions:
+
+* Is a bug *likely*? remember, it must slip through review and QA
+* What's the *severity* of a potential bug?
+* How *hard* is the test to write?
+
+## Decision table
+
+
+| likelihood | severity | easy to write | write it?       |
+|------------|----------|---------------|-----------------|
+| high       | high     | yes           |                 |
+| low        | low      | yes           |                 |
+| low        | high     | no            |                 |
+| high       | high     | no            |                 |
+
+## Decision table
+
+
+| likelihood | severity | easy to write | write it?       |
+|------------|----------|---------------|-----------------|
+| high       | high     | yes           | of course!      |
+| low        | low      | yes           | probably?       |
+| low        | high     | no            | don't bother    |
+| high       | high     | no            | yes (no choice) |
+

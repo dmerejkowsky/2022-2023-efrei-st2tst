@@ -1,0 +1,191 @@
+---
+title: Part 4 - Testing for humans
+author: Dimitri Merejkowsky
+date: EFREI 2022-2023
+---
+
+# Finding time to write tests
+
+## Don't say this
+
+
+> I'm going to add some tests first
+> before adding this new feature.
+> This means the feature will be
+> ready in two weeks instead of one,
+> but it will be worth it, I promise!
+
+
+## The answer you'll get
+
+> Why? It's a waste of time!
+> I don't pay you to write tests, I pay you
+> to add features.
+
+## "It's a waste of time!"
+
+It's a tricky argument to refute.
+
+It's easier to see the time *spent*
+*adding* tests, than to see the time *saved*
+by *having* tests.
+
+## My advice
+
+Say this instead:
+
+
+> The feature will be ready in two weeks
+
+* The *way* you add the feature is up to you.
+* Writing tests *is* part of the development
+
+You would not tell a plumber which tools to use, right?
+
+And you don't ask your boss what font to use in your IDE.
+
+## Caveat
+
+You're going to be less transparent about your work,
+so be careful with this technique.
+
+\vfill
+
+The end-goal is to gain *trust*.
+
+# Coming up with the right tests
+
+## The three amigos
+
+Before designing a new feature, have a meeting with:
+
+* The stakeholder
+* The dev
+* The tester
+
+Make sure you understand what the feature is
+and how to test it
+
+## BDD
+
+A way to describe features in terms of *scenarios*
+
+A *communication* tool more than a *development* tool.
+
+## Gherkin
+
+*If* you managed to get the three amigos to co-operate, and *if* you
+want the stakeholder to read and write the scenarios, *then* you may
+want to use
+Gherkin.
+
+But you can do BDD *without* Gherkin. The hard (and important part) - is
+the communication.
+
+## Gherkin example
+
+```gherkin
+Scenario: Making a deposit
+  Given I have a bank account with a balance of 200
+  When I make a deposit of 50
+  Then my bank account has a balance of 250
+```
+
+## Gherkin example (2)
+
+\small
+
+```python
+@given(
+    parsers.parse(
+      "a bank account with a balance of {amount:d}"
+    ),
+    target_fixture="account",
+)
+def initial_account_with_balance(
+    amount,
+):
+    ...
+@when(parsers.parse("make a deposit of {amount:d}"))
+def deposit(account, amount):
+    ...
+
+@then(parsers.parse("account has a balance of {amount:d}"))
+def assert_account_balance(account, amount):
+    ...
+```
+
+## Gherkin example (3)
+
+Here you get "executable documentation", which is nice.
+
+\vfill
+
+But again, BDD is not about the tools
+
+# Humans and CI
+
+## What's at stake
+
+One a CI system is in place, you have to make sure
+it stays *useful*
+
+## Positive feedbak loop
+
+* CI works well
+* More tests are added
+* More checks are done automatically
+* Less regressions in the main branch
+
+## Negative feedback loop
+
+* CI is too long or unreliable
+* Less tests are added
+* CI failures start getting ignored
+* More regressions in the main branch
+
+## Failing jobs
+
+Fix them *as soon as possible*
+
+If the build is failing, everyone should stop working
+until the build is fixed.
+
+## Flaking tests
+
+Either deal with them (for instance, nightly job
+to find them quickly)
+
+Or delete them.
+
+Don't ignore the failures!
+
+## Notifications
+
+Make sure devs react to CI notifications.
+
+Rotating "build farm baby sitter" might help.
+
+## Keep tests clean
+
+Tests should be:
+
+* Readable
+* Useful
+* Rather short
+* Not *too* coupled with the implementation
+
+## Keep tests independent
+
+* Use discipline
+* Or execute them in random order
+
+## CI
+
+By the way, the same advice goes for:
+
+* Compiler warnings
+* Call to deprecated functions
+* Time of compilations
+* ...
+

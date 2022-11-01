@@ -1,0 +1,43 @@
+# Mindmap
+
+
+# Testing stories
+
+  * OpenSSL vulnerability in 2020
+  * The PR that added the bug:
+      * https://github.com/openssl/openssl/commit/c589c34e619c8700ab16b152dd9c8ee58356b319
+  * The fix:
+      * https://github.com/openssl/openssl/commit/fb9fa6b51defd48157eeb207f52181f735d96148
+
+# Static Analysis
+
+# Test doubles
+
+ * Demo for each - asking - how do you test this?
+
+# Test fixtures
+
+* Java - junit
+* JavaScript - mocha
+* Python - pytest
+
+# TDD
+
+# Testing GUIs
+
+## Testing front-end
+
+* Short feedback loop, TDD not so important
+* Seleninum
+* Seleninum demo
+
+# Testing for humans
+
+* Waste of time
+* BDD
+* Automation
+* Keep them passing
+* Keep them fast
+* Kill flaky
+* Keep them clean
+* Keep them independant

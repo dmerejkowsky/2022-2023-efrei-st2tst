@@ -1,0 +1,18 @@
+Instructions here:
+
+https://github.com/dmerejkowsky/kata-rpn
+
+Special instructions for you:
+
+* Carefuly read the whole README before starting
+
+* Write a test plan before hand
+
+* Make one commit at the end of each `green` and `refactor` step
+
+* Prefix the commits with a number `1-`, `2-`, and so on
+
+* Send me a private message on teams when you've done your second commit
+
+* The team with the most commits wins
+

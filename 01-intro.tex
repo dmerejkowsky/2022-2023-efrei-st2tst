@@ -1,0 +1,480 @@
+---
+title: Part 1 - Introduction to testing
+author: Dimitri Merejkowsky
+date: EFREI 2022-2023
+---
+
+
+# What is at stake
+
+## An old technique
+
+Testing has been part of the industry forever!
+
+\vfill
+
+Let's start with an example.
+
+## Testing airplanes during storms
+
+During a storm, an airplane will experience two things:
+
+* Massive intensity
+* Huge voltage
+
+\vfill
+
+We know how to produce massive intensity and huge
+voltage in a lab, but not at the same time. What to do?
+
+##
+
+![](img/airplane-1.png)
+
+##
+
+![](img/airplane-2.png)
+
+##
+
+![](img/airplane-in-storm.png)
+
+##
+
+* First, we build a model and check where the electric current goes
+* Then we take a part of the cabin and check what happens when the current goes through
+* If those two tests work, we send a test pilot in the storm
+
+## Software is eating the world
+
+
+
+![](img/eating-the-world.jpg)
+
+## Gravity of bugs
+
+ * Ariane 5
+ * Unintended acceleration
+ * X-Ray machine - Therac 25
+
+##
+
+After quite some time, we now know that *humans are not capable* of
+writing bug-free code.
+
+## Java
+
+```java
+public String process(int input) {
+  if (value % 3 == 0) {
+    return "Hello";
+  }
+  // Bug! Missing `else`
+}
+
+String value = process(5);
+String result = value.toUpperCase();
+```
+
+
+\vfill
+Error at **compile** time:
+
+
+```text
+missing return statement
+```
+
+## JavaScript
+
+```javascript
+function process(value) {
+  if (value % 3 === 0) {
+    return "hello";
+  }
+  // Bug ! Missing `else`
+}
+
+const value = process(5);
+const result = value.toUpperCase();
+```
+
+\vfill
+Error at **runtime**:
+
+```text
+Uncaught TypeError: Cannot read properties of
+undefined (reading 'toUpperCase')
+```
+
+## Productivity / reliability
+
+![](img/productivity-reliability.png)
+
+##
+
+The compiler alone won't save you.
+
+## Demo
+
+## FizzBuzz
+
+Rules:
+
+Count from 1 to 100
+
+* If divisible by 3, print "Fizz"
+* If divisible by 5, print "Buzz"
+* If divisible by 15, print "FizzBuzz"
+* Otherwise, print the number
+
+# Requirements
+
+## Introduction
+
+> We need you to draw seven red lines, all of them strictly
+> perpendicular, some with green ink, and some with transparent.
+
+
+The expert
+
+=> https://www.youtube.com/watch?v=BKorP55Aqvg
+
+
+## Definition
+
+Requirements are statements specifying exactly what it
+is that a piece of software should do under certain
+conditions.
+
+Requirements ensure that the developers know what to
+build, and the testers know what to test.
+
+Note that there are other methods of determining what
+software to build aside from traditional requirements,
+such as user stories.
+
+## Definition of software testing through requirements
+
+Software testing is the process of applying *metrics* to
+determine product *quality*.
+
+It is the *execution* of software and the comparison of the
+results of that execution against a set of pre-determined
+criteria.
+
+
+## Requirements and domain
+
+Depending on domain, you may want stricter requirements.
+
+Nuclear power-plant software is not the same as a mobile game.
+
+## Testability - 1
+
+The bad requirements state how something should be
+done, not what the system needs to do.
+
+From a tester’s perspective, one of the most important
+aspects of requirements is whether they are testable.
+
+From a software development life cycle perspective,
+“testable requirements” is another term for “good
+requirements”. **A requirement that cannot be tested
+cannot be shown to have been met**.
+
+## Testability - 2
+
+For the requirements to be testable, they must meet five
+criteria, each of which we will cover individually. They
+should be:
+
+1. Complete
+2. Consistent
+3. Unambiguous
+4. Quantitative
+5. Feasible to test
+
+## Consistency
+
+The requirements should not contradict each other or the laws of the
+product's domain.
+
+## Unambiguous
+
+Requirements should specify things as *precisely* as possible for working
+in the particular domain the software is for.
+
+Note they'll always be room for a *little* ambiguity
+
+## Quantitative
+
+The requirements should be **quantitative** (as opposed to
+**qualitative**).
+
+If you can apply numbers to a requirement, you should.
+You should avoid using any sort of subjective terms
+such as “fast”, “responsive”, “usable”, or “beautiful” .
+
+
+## functional vs non-functional requirements
+
+* Functional : what a system should do
+
+* Non-functional: What a system should be
+
+## Example of non-functional requirements
+
+> The system shall be usable by an experienced computer user
+with less than three hours’ training.
+
+\vfill
+
+> The system shall be able to support one hundred simultaneous
+users.
+
+\vfill
+
+> The system shall be reliable, having less than one hour of
+unanticipated downtime per month.
+
+## Testability
+
+Functional requirements are (relatively) simple to test
+because  they say that a specific behavior should occur under
+certain circumstances.
+
+Non-functional requirements are harder to test because
+the conditions are vaguer. But you can try and
+*quantify* non-functional requirements
+
+## Implicit requirements
+
+Don't forget those!
+
+For instance, people expect there data to stay **private** and **safe**,
+but the is often missing from the requirements.
+
+You can also come upon your own requirements, based on your
+experience and what you know about the domain
+
+## Specification
+
+A set of requirements in a written form.
+
+## Writing specifications
+
+A.k.a: Requirements engineering
+
+It takes **a lot of text** to remove ambiguity.
+
+Changes are often difficult to make
+
+## Specifications in real life - 1
+
+![](img/requirements-01.jpg)
+
+## Specifications in real life - 2
+
+![](img/requirements-02.jpg)
+
+## Specifications in real life - 3
+
+![](img/requirements-03.jpg)
+
+## Specifications in real life - 4
+
+The spec you'll deal with  will often be incomplete and likely contains
+errors.
+
+\vfill
+
+The correct way to deal with it is to *refine* the requirements with
+the authors of the spec
+
+
+# Defects
+
+![](img/major-bug.png)
+
+## Definition
+
+A defect is any sort of error in a
+program which causes the system
+under test to do one of the
+following:
+
+1. Not meet the specified
+requirements (functional or
+non-functional)
+
+2. Return an incorrect result
+
+3. Stop execution unexpectedly
+(system stability is an implicit
+requirement in all systems
+under test)
+
+## Happy path / sad path
+
+Aka success case, failure case
+
+Success case:  returns an expected result given an input
+
+Failure path : check what happens when the input is incorrect
+
+
+# Testing Approaches
+
+
+## Black -, White-, and Grey-box testing
+
+![](img/black-gray-white-testing.png)
+
+## Black-box
+
+The tester has no knowledge of the internal workings of the system and
+accesses the system as a user would. In other words, the tester does not
+know about what database is in use, what classes exist, or even what
+language the program is written in. Instead, testing occurs as if the
+tester were an ordinary user of the software.
+
+## White box
+
+The tester has
+intimate knowledge of the codebase and directly tests
+the code itself. White-box tests can test individual
+functions of the code, often looking at much more
+granular aspects of the system than black-box tests.
+
+## Gray box testing
+
+Grey-box testing is a hybrid approach between white
+and black-box testing. Grey-box testing involves
+accessing the system as a user (as a black-box tester
+would do), but with knowledge of the codebase and
+system (as a white-box tester would have). Using this
+knowledge, the gray-box tester can write more focused
+black-box tests.
+
+# Testing levels
+
+## Smoke testing
+
+A smoke test involves a minimal amount of testing that
+can be done to ensure that the system under test is ready
+for further testing.
+
+It can be thought of as a guard to further testing—unless
+the system can perform some minimal operations, you
+don’t move on to running a full test suite.
+
+This is usually a small number of tests, checking that the
+software can be installed, that major functionality seems
+to work, and that no obvious problems appear.
+
+Smoke testing allows you to determine whether the
+software is even worth testing before running the full
+test suite on it.
+
+## Smoke testing - example
+
+For example, if you are testing an e-commerce site, you
+may check to see that a user can access the site, search
+for an item, and add it to their shopping cart.
+
+The full test suite would check numerous edge cases and
+paths, as well as all of the ancillary functionality such as
+recommendations and reviews.
+
+## Acceptance testing
+
+Acceptance testing is any kind of testing that checks
+that the system is acceptable to continue to the next
+phase of its life cycle, usually delivery to a
+customer, or making it ready for a user.
+
+## Releasing software
+
+* walking skeleton : bare minimum for QA to do its job
+* `alpha` : version with a lot of expected bugs and new features
+* `beta` : version with the new features, fewer bugs expected, bigger audience
+* `release candidate` : promoting betas, checking final release can be made
+* `public release`: promoting a release candidate
+
+## Exploratory testing
+
+This is defined as testing without a specified test plan,
+where the main goal is to learn about and influence the
+development of the system, as opposed to specifically
+determining whether the observed behavior is equal to
+the expected behavior.
+
+Exploratory testing allows the tester to follow their own
+path, thinking of edge cases on the fly or following
+leads if something seems like it may cause a problem. It
+also allows the tester to learn by doing, instead of
+reading design documentation or code, which is often a
+much more effective way to understand a system.
+
+## A/B Testing
+
+![](img/a-b-testing.png)
+
+
+## Penetration testing
+
+Or ... how to get a security certification
+
+# Manual vs Automated
+
+## Manual - pros
+
+* It’s simple and straightforward
+* It’s cheap
+* It’s easy to set up
+* There is no additional software to learn, purchase,
+  and/or write
+* It’s extremely flexible
+* You are more likely to test things that users care about
+  humans can catch issues that automated testing does
+  not
+
+## Manual - cons
+
+* It’s boring
+* It’s often not repeatable
+* Some tasks are difficult or impossible to test manually
+* Human error is a possibility
+* It is extremely time- and resource-intensive
+* It limits you to black-box and gray-box testing
+
+## Automated - pros
+
+* There is no chance of human error during test
+  execution
+* Test execution is extremely fast
+* It is easy to execute, once the system is set up
+* It is easily repeatable
+* It is simple to analyze the process
+* It is less resource-intensive
+* It is ideal for testing some aspects of the system which
+  manual testing is bad at testing
+* It scales very well
+
+
+## Automated - cons
+
+* It requires extra setup time up-front
+
+* It may not be able to catch some user-facing defects
+
+* It requires learning how to write automated tests, as
+  well as additional tools and frameworks.
+
+* It requires more skilled staff
+
+* Automated tests only test what they are looking for
+
+* Tautological tests and other bad tests may creep in
+

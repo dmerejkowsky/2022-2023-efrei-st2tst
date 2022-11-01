@@ -1,0 +1,1082 @@
+---
+title: Part 6 - Clean Code
+author: Dimitri Merejkowsky
+date: EFREI 2022-2023
+---
+
+# Chapter one - What is Clean Code?
+
+## Well, let's clean some code!
+
+Example with fizzbuzz
+
+## Start code
+
+```java
+ public static String fizzBuzzGame ( int x ) {
+    String result;
+    if (x % 3 == 0 && x % 5 == 0) {
+        result = "fizzbuzz";
+    }
+    else if (x%3==0) {
+        result = "fizz";
+    }
+  else if ( x % 5 == 0 ) {
+      result = "buzz";
+  }
+    else {
+      result = Integer.toString(x);
+    }
+    return result;
+}
+```
+
+## End code
+
+```java
+public static String fizzBuzz(int number) {
+        boolean divisibleBy3 = number % 3 == 0;
+        boolean divisibleBy5 = number % 5 == 0;
+        // Note: keep this test first
+        if (divisibleBy3 && divisibleBy5) {
+            return "fizzbuzz";
+        }
+        if (divisibleBy3) {
+            return "fizz";
+        }
+        if (divisibleBy5) {
+            return "buzz";
+        }
+        return Integer.toString(number);
+    }
+```
+
+## How did we do it?
+
+::: incremental
+* Tests as a safety net
+* Lots of *small* refactorings
+  - Rename parameter
+  - Rename method
+  - Extract local variable
+  - Get rid of `else if`
+  - Cleanup comments
+:::
+
+See [matching PR on github](https://github.com/dmerejkowsky/fizzbuzz-refactorings/pull/1)
+
+## A first definition
+
+
+> Clean code always looks like it was written by someone who
+> cares
+
+Michael Feathers
+
+## Why do we want clean code
+
+> "Any fool can write code that a computer can understand.
+> Good programmers write code that humans can understand."
+
+Martin Fowler
+
+
+\vfill
+
+We want clean code because other devs will maintain it in the future.
+
+## Code quality
+
+One of the biggest contributors to team productivity ...
+
+But one which is the most difficult to measure.
+
+## Measuring code quality
+
+Code quality is a highly *subjective* metric.
+
+It can vary depending on the context, background and
+experience of the team.
+
+## An illustration
+
+![](img/wtf.png)
+
+## Sad fact
+
+The natural tendency of any code base is for the code quality to *degrade*.
+
+Maintaining code quality is always a challenge.
+
+That's why you should be *continuously refactoring*
+
+#  Advice
+
+## Take your time!
+
+It's usually better to have 80% well done than 100% with lower quality
+and more rush.
+
+
+\vfill
+
+*Note: some teams don't apply this rule*
+
+## Boy scout rule
+
+Try and leave the code a little better than you found it.
+
+## The psychopath
+
+![](img/shining.png)
+
+
+> Always code as if the person who ends up maintaining your code
+> will be a violent psychopath who knows where you live.
+
+Martin Golding
+
+Usually, the violent psychopath is you!
+
+## Broken Window
+
+![](img/broken-windows.png)
+
+
+## Be careful with metrics
+
+Metrics can be gamed.
+
+Just because it's easy to measure, does not mean it's relevant.
+
+\vfill
+
+On the other hand, they can be used to *discover facts* about the code
+and (hopefully) *create new, good habits*.
+
+# What the science has to say
+
+## sleep is important
+
+Don't work late ! And make sure to sleep well.
+
+You'll write really bad code when you're sleep deprived, and you'll be
+*unable to notice how bad you are working*.
+
+## Code review works
+
+Go ask other people to read and comment your code!
+
+After all, it's how open source works :)
+
+## Tests matter
+
+Of course, otherwise I would not be giving this course ;)
+
+##
+
+... and that's all. The *science* of software development has yet to reach
+consensus on *anything* but the importance of good sleep and code reviews.
+
+And there's debate to know if there are more efficient things than code
+reviews, by the way.
+
+# Chapter two - refactoring
+
+Demo!
+
+# Chapter three : Clean code basics
+
+## Convention - definition
+
+There are several ways of doing the same thing, but the community agrees that one of the ways is better.
+
+Note: often, arguments are used, but remember that every convention is *arbitrary*.
+
+## Following conventions
+
+Follow established conventions.
+
+Python has PEP8:  https://www.python.org/dev/peps/pep-0008/
+
+\vfill
+
+Write code in English - unless the core domain is in French.
+
+\vfill
+
+Use the same tools (IDE...) as your team mates.
+
+Careful: sometimes the conventions are *implicit*.
+
+## Comments
+
+Let's talk about comments.
+
+## Comment position
+
+Either:
+
+- on an other line, before the described code
+- on the same line, after the described code
+
+```java
+/*
+example 1: - a long comment talking
+about foo() and bar() ...
+*/
+foo();
+bar();
+
+x = spam;  // short comment about x's assignation
+```
+
+## Useless Comments (1)
+
+Do not put useless comments:
+
+```java
+/* foo.java written by John Doe.
+   Last modified on 2021-03-31
+*/
+```
+
+- We already know the file name because  we've just opened it!
+- We often know (or don't care) about the author name
+- Ditto for date of last change (which you'll forget to update)
+
+This is sometimes called *rotten* comments.
+
+## Useless Comments (2)
+
+```java
+/**
+* Adds 2 to to x
+* @param x : the number to add 2 to.
+* @return the result of adding 2 to x.
+*/
+int addTwo(int x) {
+  return x + 2;
+}
+```
+
+We can know all this by looking at the *signature of the function*!
+
+
+## Dead code
+
+Do not leave dead code:
+
+```java
+void doStuff() {
+    // x = do_x_v1()
+    // y = do_y_v2()
+    // z = combine(x, y)
+    x = do_x_v2()
+    y = do_y_v2()
+    z = combine_v2(x, y)
+}
+```
+
+Dead code also *rots* and *smells*.
+
+Use (or learn!) version control instead
+
+## Useful comments
+
+Do insert comments when the code is not enough.
+
+Try to describe *why*, not *how*.
+
+Further reading:
+
+https://hackaday.com/2019/03/05/good-code-documents-itself-and-other-hilarious-jokes-you-shouldnt-tell-yourself/
+
+## JavaDoc
+
+```java
+/**
+ * In java - a special kind of comment
+ * @param x
+ */
+void doStuff(int x) {
+}
+```
+
+## When should you use documentation comments?
+
+Lots of debate.
+
+What I do:
+
+- Put them in *all* public methods if you are writing a library
+- Use them as high-level descriptions of tests
+
+
+```java
+@Test
+void testComplexFeature() {
+    /*
+    Scenario:
+    Given ..
+    When ...
+    Then ...
+    */
+    // lots of code here
+}
+```
+
+
+##  Naming
+
+One of the hardest problems in computer science
+
+## Some rules
+
+- Be consistent
+- Don't use abbreviations
+- Don't put the type in the name
+- Use a descriptive name
+
+```java
+int age = 16  // too short
+int minimal_age = 16 // nice
+int minimal_age_to_be_able_to_drive  16  // to long
+```
+
+## Plural and singular
+
+Use plural if it's a collection.
+
+```java
+for(int foo: foos) {
+    ...
+}
+```
+
+Or sometimes there's a nicer word:
+
+```java
+// An example from Bouygues Telecom
+for(Ligne ligne: parc) {
+
+}
+```
+
+## Use good metaphors
+
+Use names you could explain to the rest of the team.
+
+*Bad*: "Unlock Device"
+
+*Good*: "Verify Identity"
+
+
+## Rules for variable name size
+
+Big scope, long name
+
+Short scope, small name.
+
+In general, you are allowed one-letter variables names in `for` loops
+and list comprehensions but almost nowhere else.
+
+
+##  Functions
+
+
+## Grammar for function names
+
+Use verbs at the imperative, present tense
+
+```java
+// Good
+void displayTree() { /* ... */ }
+
+// Bad
+void displaysTheTree() { /* ... */ }
+
+// Bad
+void treeDisplay() { /* ... */ }
+```
+
+## Generic vs specific functions
+
+The more generic the function, the shorter the name
+
+```java
+void makeCoffee(bool sugar) {
+    if (sugar) {
+        makeCoffeeWithSugar();
+    }
+    else {
+        makeCoffeeWithoutSugar();
+    }
+}
+```
+
+## Returning booleans
+
+Use `is`, or `has`, etc so that the code reads better:
+
+```java
+if isAllowedToDrive(person) {
+   // ...
+}
+```
+
+
+## How big should my function be?
+
+* Functions should be really short.
+
+## Code smell : 'and'
+
+```java
+void doBarAndFoo() {
+	/* ... */
+}
+```
+
+Or:
+
+```java
+void firstThingThenOtherThings() {
+	/* ... */
+}
+```
+
+## Code smell : "step" comments
+
+A function that looks like this ...
+
+```java
+void myBigFunction() {
+    // step 1
+    ...
+
+    // step 2
+    ...
+
+    // step3
+    ...
+}
+```
+
+... can probably be split in 3 (the comments are the clue)
+
+## Code smell :  Number of arguments
+
+- 0 to 3 : probably fine
+- more than 3 : danger -> consider introducing a struct or class for storing the parameters
+
+
+## Example - too many parameters
+
+
+```java
+public class Coffee {
+    public void orderCoffee(
+        boolean tall, boolean milk, boolean noSugar)
+    {
+        makeCoffee(tall, milk, noSugar);
+        serve();
+    }
+
+    private void makeCoffee(
+        boolean tall, boolean milk, boolean noSugar)
+    {
+        if (tall)  addWater();
+        if (milk) addMilk();
+        if (!noSugar)  addSugar();
+    }
+}
+```
+
+## Example - using a record for the command
+
+```java
+// New ↓
+record Order(boolean tall, boolean milk, boolean sugar) {
+}
+
+public class Coffee {
+   public void orderCoffee(Oder older) {
+        makeCoffee(order);
+        serve();
+    }
+
+    // Note <- only one parameter now
+    private void makeCoffee(Order order) {
+        if order.tall() addWater();
+        if order.milk() addMilk();
+        if order.sugar() addSugar();
+    }
+}
+```
+
+## Avoid double negative
+
+Notice how we went from
+
+```java
+if(!noSugar)
+```
+
+to
+
+```java
+if(order.sugar()) {
+}
+```
+
+which is more readable.
+
+Better to have a variable with default value of `true`,
+rather than a negative variable with a default value of `false`.
+
+## More or less lines?
+
+::: incremental
+* It depends!
+:::
+
+## Less lines is better
+
+```java
+if (canVote) {
+    return true;
+}
+else {
+    return false;
+}
+```
+
+vs
+
+```java
+return canVote;
+```
+
+## More lines is better
+
+```java
+if (
+    age >= 18
+    && nationality == "French"
+    && electorsList(sector).contains(name);
+) {
+   System.out.println("can vote");
+}
+```
+
+vs
+
+```java
+bool adult = age >= 18;
+bool french = nationality == "French";
+bool registered = electorsList(sector).contains(name);
+
+if (adult && french && registered) {
+   System.out.println("can vote");
+}
+```
+
+## Early return - Before
+
+\small
+```java
+String returnStuff(SomeArgument arg1, SomeArgument arg2) {
+  if (arg1.isValid()) {
+    if (arg2.isValid()) {
+      SomeObject object = doStuff(arg1, arg2);
+      if (object != null) {
+        return "Stuff";
+      } else {
+        throw new RuntimeException(); // object was null
+      }
+    } else {
+      throw new RuntimeException(); // arg2 was not valid
+    }
+  } else {
+    throw new RuntimeException(); // arg1 was not valid
+  }
+}
+```
+
+::: incremental
+* "Happy path" in the middle and to the right
+* Cause of the exception far from the throw
+:::
+
+## Early return - After
+
+\small
+```java
+String returnStuff(SomeArgument arg1, SomeArgument arg2) {
+  if (!arg1.isValid()) {
+    throw new RuntimeException();
+  }
+  if (!arg2.isValid()) {
+    throw new RuntimeException();
+  }
+
+  SomeObject object = doStuff(arg1, arg2);
+
+  if (object == null) {
+    throw new RuntimeException();
+  }
+
+  return "stuff";
+}
+```
+
+::: incremental
+* Comments are gone
+* Less horizontal space taken
+* "Happy path" *after* the "sad path"
+* Cause of exception right before the throw
+:::
+
+# Chapter four : Clean code and Classes
+
+## Foreword
+
+Classes, composition and inheritance are powerful but *dangerous* tools.
+
+* They hide the control flow.
+* It's very easy to make a mess!
+
+## Naming
+
+Classes names are *nouns* and start with an uppercase letter.
+
+Avoid meaningless words like `Handler`, `Manager`, `Data`, `Info` ...
+
+## Use inheritance with caution
+
+Lots of powerful and dangerous features:
+
+* Multiple inheritance (for languages that have them)
+* Some attribute may be shared (ditto)
+
+##  Advice
+
+- Only every inherit from *one* parent
+- Use inheritance for exceptions
+- Use inheritance for abstract base classes (more on this later)
+
+And that's all!
+
+# Chapter five : Packages and modules
+
+## Naming
+
+Use short names, in `lower_case`
+
+## Avoid stutter
+
+```java
+package corp.acme.fraction;
+public class Fraction {
+  // ...
+}
+```
+
+```java
+// Bad:
+static Fraction addFractions(Fraction fractionA, Fraction fractionB) {
+    // ...
+}
+```
+
+```java
+// Better
+static Fraction add(Fraction a, Fraction b) {
+    // ...
+}
+```
+
+# Chapter six: Clean architecture
+
+## What is architecture?
+
+the collection of modules, classes and methods that will
+be used throughout the project.
+
+This is more high-level than the *contents* of the classes, modules, and functions.
+
+## Rules of architecture
+
+The _rules_ of architecture do not depend on the language.
+
+Software is made of:
+
+- sequence
+- selection
+- iteration
+
+(It never changed for the last 50 years)
+
+So if the nature of the code did not change, the rules of architecture did
+not change either.
+
+## Architecture
+
+Architecture, design, and programming are the same thing - the only difference
+is how high-level they are.
+
+Corollary: architects who do not write code, or programmers who do not think about
+high-level design are not doing their best.
+
+##  APIs
+
+## Definition
+
+Application Programming Interface
+
+A set of functions (or methods) or class you can use
+as an *external* user of a piece of code
+
+## APIs and libraries
+
+Often you use an API from a library.
+
+Example with `datetime`:
+
+https://docs.python.org/3/library/datetime.html
+
+
+## What makes good APIs
+
+* Good naming
+* Good metaphors
+* Consistency
+* Easy to use
+* Hard to misuse
+* Simple things should be easy, complex things should be possible
+
+
+## Making good APIs
+
+It's *hard*
+
+What can help:
+
+* Brainstorms
+* Tests
+* Documentation
+* Examples
+* Review
+
+And you should do all  of this *before* writing the production code, because
+architecture is much harder to change afterwards!
+
+## The big problem with APIs
+
+They are hard to change.
+
+Sometimes they *break*, which means *all the code that use them* must change,
+and that can have really bad consequences.
+
+## The bad news
+
+As soon as you *write a function* in a piece of code, you *are* defining
+an API from the point of view of the rest of the code.
+
+All of the above applies (minus the fact breaking them is not as bad)
+
+## Advice
+
+Treat any piece of code as it was part of a public library usable by anyone.
+
+## Object Oriented Programming
+
+One definition: put *data* and *behavior* that operate on this data in
+the same place.
+
+Note: not necessarily achieved with classes. It's mostly a way
+of *structuring* code
+
+## Encapsulation
+
+The big idea: users of a class should not *need to know* about
+how it works internally.
+
+## Example: the counter class
+
+```java
+public class Counter {
+    private int _tally;
+
+    public Counter() {
+        _tally = 0;
+    }
+
+    public void add(int count) {
+        _tally += count;
+    }
+
+    public int getTotal() {
+        return self._tally;
+    }
+}
+```
+
+- `Counter(), add(), total()`: public interface
+- `_tally`: private implementation detail
+
+
+## An other example
+
+```java
+public class Person {
+    String firstName;
+    String lastName;
+
+    public Person(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public String fullName() {
+        return firstName + " " + lastName;
+    }
+}
+```
+From outside the `Person` class:
+
+* `firstName` and `lastName` are read/write
+* `fullName` is read-only
+
+## Invariant
+
+We say the class enforces an *invariant*
+
+The full name will *always* be the concatenation of `firstName`
+and `lastName`.
+
+The tally will *always* contain the running total of calls to `add`.
+
+## Basic principles
+
+1. Passes all the tests
+1. Minimize duplication
+1. Maximize clarity
+1. Fewer elements
+
+
+## How to get clean architecture
+
+* Make it work, make it right, make it fast
+* Use TDD
+* Always look back at the architecture
+
+## More advanced principles
+
+* Single Level of Abstraction
+* Law of Demeter
+* Tell, don't ask - Command/Query Separation
+* Calisthenic objects
+* SOLID
+* DDD tactics
+
+...
+
+And more
+
+## Advice for principles
+
+* They are abstract
+* They often contradict each other
+
+Don't try and follow all of them at once!
+
+## Law of Demeter
+
+Formulation:
+
+You should *not* access the *fields of the field* of an other class
+
+## Example - Employee
+
+```java
+record Department(String name) {}
+
+class Employee {
+    private String name;
+    private String department;
+
+    public Employee(String name) {
+        this.name = name;
+        this.department = null;
+    }
+
+    public Employee(String name, Department department) {
+        this.name = name;
+        this.department = department;
+    }
+}
+```
+
+## Example - EmployeeDirectory
+
+```java
+class EmployeeDirectory {
+  public static String describeEmployee(Employee employee) {
+    String employeeName = employee.name;  // OK;
+    String departmentName;
+    if(employee.department != null) {
+       departmentName= employee.department.name ; // Bad!
+    }
+    if(departmentName != null) {
+      return employeeName + " from  " + departmentName;
+    } else {
+      return employeeName;
+  }
+}
+```
+
+## Why is the law of Demeter a good idea?
+
+We have a coupling between `describeEmployee()` and `Employee`  (which is fine)
+
+But the `describeEmployee()` method *knows* that:
+
+- employees belong to 0 or 1 department
+- every department has a name
+
+(which is tighter coupling and *not* fine)
+
+## When the specifications change
+
+Let's say employee can belong to *one or more* departments.
+
+```diff
+public class Employee {
+- private Department department;
++ private ArrayList<Department> departments;
+}
+```
+
+Now we need to change `describeEmployee`, which a sign of *fragility*.
+
+## When the specifications change
+
+```diff
+String describeEmployee(Employee employee) {
+    String employeeName = employee.name;
+    String departmentName;
+-    if(employee.department != null) {
+-       departmentName= this.department.name;
+-    }
++    if(!employee.departments.isEmpty()) {
++        Department department = employee.departments[0];
++        departmentName = department.name;
++    }
+}
+```
+
+## The fix
+
+Move the coupling from `describeEmployee` and `Department` inside `Employee`
+
+```java
+class Employee {
+    // New!
+    String getDepartmentName() {
+        if (this.department != null) {
+            return department.name;
+        }
+        return null;
+    }
+}
+```
+
+## The fix (2)
+
+```java
+// No more Demeter violation here
+static String describeEmployee(Employee employee) {
+    String employeeName = employee.name;
+    String departmentName = employee.getDepartmentName();
+    if (departmentName != null) {
+        return employeeName + " from " + departmentName;
+    } else {
+        return employeeName;
+    }
+}
+```
+
+## Same change, different code
+
+```diff
+class Employee:
+   String getDepartmentName() {
+-       if (this.department != null) {
+-           return this.department.name;
+-       }
++       if(!this.departments.isEmpty()) {
++           firstDepartment = this.departments[0];
++           return firstDepartment.name;
++      }
+    }
+}
+```
+
+::: incremental
+* `describeEmployee()` in the other class - `EmployeeDirectory` - did not need to change!
+:::
+
+
+## Before
+
+![](img/demeter-1.png)
+
+## After
+
+![](img/demeter-2.png)
+
+
+
+## Command/Query separation
+
+- Command: change state
+- Query : return some state
+
+## Command/Query separation
+
+Either:
+
+Command: returns nothing, has side effects
+
+Query : returns something, has no side effects
+
+Avoid side-effects in a function that returns a value!
+
+## SRP
+
+Single responsibility principle
+
+A class/module should have only *one* reason to change.
+
+- What are the things that can change?
+- Who might be asking for these changes?
+
+
+## SRP
+
+Smells:
+
+- A place where code keeps changing
+- Conflicts happening in the same file
+- Rigid code
+
+##  Going further
+
+- SOLID
+- CUPID: https://dannorth.net/2022/02/10/cupid-for-joyful-coding/
+- Primitive Obsession
+- Behavior Drive Development
+- Domain Driven Design
+

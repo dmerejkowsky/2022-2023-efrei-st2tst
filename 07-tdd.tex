@@ -1,0 +1,212 @@
+---
+title: Part 7 - Test Driven Development
+author: Dimitri Merejkowsky
+date: 2022-2023 @ EFREI
+---
+
+#  Introduction
+
+## My time at Aldebaran
+
+The qiBuild project
+
+* 6 years
+* ~= 40k lines of Python code
+* 3,286 commits
+* 158,703 lines added
+* 120,441 lines removed
+
+## The qiBuild project
+
+Could not afford bugs
+
+Could not afford long delays before writing new features
+
+End-users right next to me ...
+
+## Before TDD
+
+I hate doing manual testing, so I wrote lots of tests
+
+But they were:
+* Slow
+* Hard to maintain
+* Not very good at catching bugs
+
+And changing architecture looked scary because it would mean rewriting all the tests
+
+## After TDD
+
+Tests were:
+
+* Fast
+* Good at catching bugs
+* Helped me achieve a nice architecture
+
+I still did beta-test releases of qibuild, but very few bugs managed to
+slip through – and they were promptly fixed anyway.
+
+It was easy to add new features, even for new contributors
+
+# TDD
+
+## What is TDD?
+
+* A technique to make test and production code evolve together
+* Something that changed the way I write software for ever
+* Not for everyone or for every situation
+* Worth trying
+
+And don't feel bad if you don't use it!
+
+
+## Feedback - 1
+
+![](img/feedback-1.png)
+
+## Feedback - 2
+
+![](img/feedback-2.png)
+
+
+## The cycle
+
+![](img/tdd.png)
+
+## The rules
+
+* You shall not write production code *except* to make a failing test pass
+* You shall not write more production code than is required to make a failing test pass
+* You shall not write more test code than is required to provoke a failure (any kind of failure)
+* Once all test pass, you *have* to stop and consider a refactoring
+
+
+# Tips and Tricks
+
+## Keep trying
+
+Keep your cycles shorts
+
+Use ZOMBIES (zero/one/many/boundary/interface/error/scenario) to know
+which test to write next
+
+Learn how to not get stuck
+
+In takes practice to master TDD, but don't expect results
+before quite some time!
+
+
+## On test frameworks
+
+Use a framework made for your language
+
+* Avoid Rspec-like frameworks unless you are using Ruby
+* Avoid JUnit-like frameworks unless you are using Java
+* Use pytest when using Python
+
+In doubt, use the *simple* one.
+
+Don't be afraid to write your own test "helpers".
+
+## Isolation
+
+Each test can be run independently of the others.
+
+They should be ran in parallel
+
+Ideal goal: if there's one bug in the production code, exactly one
+test fails and tells you where to look.
+
+## Structure
+
+* Arrange
+* Act
+* Assert
+* Annihilate (optional)
+
+## One assertion per test
+
+More than a *logical* assertion - you are allowed to use
+the ``assert`` keyword more that once
+
+Avoid `act,assert,act,assert`
+
+## Write the scenario down
+
+```java
+/**
+  Scenario:
+  - Create a file named a.txt in the local folder with
+    "old" contents
+  - Add a new version of the `a.txt` file in the remote folder
+  - Synchronize the remote and local folders
+  - Check that `a.txt` has been updated
+*/
+@Test
+public void can_update_local_file() {
+    // ...
+}
+```
+
+## Baby steps
+
+![](img/baby-steps.png)
+
+## Many Much More Smaller Steps
+
+![](img/mmmss.excalidraw.png)
+
+=> https://www.geepawhill.org/2021/09/29/many-more-much-smaller-steps-first-sketch/
+
+# Demo - Fractions
+
+$f_1 = \frac{n_1}{d_1}$
+
+$f_2 = \frac{n_2}{d_2}$
+
+$f_1 + f_2 = \frac{n_1.d_2 + n_2.d_1}{d_1.d_2}$
+
+## Software writer and accountants
+
+In both cases, a tiny error can make the company loose millions
+
+Accountants are certified and must use the "double entry book-keeping" method.
+
+\vfill
+
+Why not the same standard for software devs?
+
+## Double Loop
+
+![](img/tdd-double-loop.png)
+
+## TDD Killer features - 1
+
+* Easy to organize pair programming in ping pong mode
+* Emerging design and solution
+* All business code is tested
+* I can stop and restart my work at any time
+* TDD is fun
+* Release is cool
+* No dead code
+* Better interest for business
+
+## TDD Killer features - 2
+
+* Coverage is no more a concern
+* Bugs easier to handle
+* Bug detected earlier
+* Better predictability
+* No more debugger to use
+* Code API is cleaner
+* Fast feedback
+* Documentation
+* Better confidence in code and tests
+* Easy to know when to stop coding
+
+## Starting TDD
+
+Don't ask permission!
+
+There are meetups you can attend - ask me
+for the details

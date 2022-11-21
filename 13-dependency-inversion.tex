@@ -1,5 +1,5 @@
-#---
-title: Part 12 Dependency inversion
+---
+title: Part 13 Dependency inversion
 author: Dimitri Merejkowsky
 date: EFREI 2022-2023
 ---
@@ -74,7 +74,7 @@ public interface Repository {
 }
 ```
 
-# Solution - in code
+## Solution - in code
 
 ```diff
 -import SQLRepository;
@@ -220,6 +220,8 @@ class FakeRepository(Repository):
     def get_employee_by_id(self, id)
 ```
 
+\vfill
+
 You'll get a runtime error when `get_employee_by_id()` is called.
 
 
@@ -236,7 +238,15 @@ class FakeRepository(Repository):
     def get_employee_by_id(self, id)
 ```
 
+\vfill
+
 You'll get an error when `FakeRepository()` is instantiated,
 which is sooner than with the old way.
 
 Coders coming from other languages won't be surprised.
+
+## The hype way
+
+Use type annotations and a type checker, like
+`flow` or `typescript` (for javascript) - or
+`mypy` (for Python)

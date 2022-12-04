@@ -1,0 +1,260 @@
+---
+title: Part 14 - Third workshop feedback
+author: Dimitri Merejkowsky
+date: EFREI 2022-2023
+---
+
+# Gilded Rose Feedback
+
+Let's see various solutions
+
+##
+
+More readable thanks to a few functions extractions
+
+```javascript
+updateQuality() {
+  this.items.forEach((item) => {
+    if (this.isSulfuras(item)) {
+      item.quality = item.quality - 1;
+    }
+}
+```
+
+##
+
+Ditto with a switch/case
+
+```javascript
+updateQuality() {
+  this.items.forEach((item) => {
+    switch(item.name) {
+      case 'Aged Brie':
+        this.increaseQuality(item);
+        // ...
+        break;
+    }
+  }
+}
+```
+
+##
+
+A bit better: not all the logic inside the GildedRose class
+
+```javascript
+class Item {
+  // ..
+  increaseQuality() {
+    if (this.quality < this.maxQuality) this.quality++;
+  }
+
+  decreaseQuality() {
+    // ..
+  }
+
+  decreaseSellIn() {
+    // ...
+  }
+}
+```
+
+##
+
+Do you see types hiding there?
+
+```javascript
+updateQuality() {
+  switch (true) {
+  case item.name === 'Aged Brie':
+    this.updateAgedBrie(item);
+    item.sellIn--;
+    break;
+  case item.name === 'Backstage pass':
+    this.updateTicket(item);
+    item.sellIn--;
+    break;
+  }
+}
+```
+
+# My solution
+
+Not to brag, just to show how far you could have gone ...
+
+\vfill
+
+And also show you a cool design pattern
+
+## Strategy pattern (1)
+
+Create a *type* for each class of item:
+
+```python
+def get_strategy(item):
+    if "Sulfuras" in item.name:
+        return Legendary(item)
+    elif "conjured" in item.name.lower():
+        return Conjured(item)
+    elif "Backstage pass" in item.name:
+        return BackstagePass(item)
+    elif "Aged Brie" in item.name:
+        return Increasing(item)
+    else:
+        return Default(item)
+```
+
+
+## Strategy pattern (2)
+
+A base class for all the ways the quality and
+price evolve:
+
+```python
+class Strategy(metaclass=ABCMeta):
+    def __init__(self, item):
+        self.item = item
+
+    @abstractmethod
+    def update_quality(self):
+        pass
+
+```
+
+
+## Strategy pattern (3)
+
+Override `update_quality`:
+
+
+```python
+class Default(Strategy):
+    def update_quality(self):
+        """
+        If out of date, decrease quality by 2
+        Else, decrease quality by 1
+        """
+        ...
+
+class Legendary(Strategy):
+    def update_quality(self):
+        """
+        Do nothing, legendary items never loose
+        quality
+        """
+        ...
+```
+
+## Strategy pattern (4)
+
+
+
+```python
+class Conjured(Strategy):
+    def update_quality(self):
+        """
+        Conjured items decrease in quality twice
+        as fast
+        """
+
+
+class Cheese(Strategy):
+    def update_quality(self):
+        """
+        If out of date, increase by 2
+        Otherwise, increase by 1
+        """
+```
+
+## Extract domain computations
+
+```python
+# Before:
+class Default(Strategy):
+    def update_quality(self):
+        """
+        If out of date, decrease quality by 2
+        Else, decrease quality by 1
+        """
+        ...
+
+# After:
+class Default(Strategy):
+    def update_quality(self):
+        if self.out_of_date():
+            self.decrease_quality_by(2)
+        else:
+            self.decrease_quality_by(1)
+```
+
+## Extract domain computations (2)
+
+```python
+class Strategy:
+    ...
+    def increase_quality_by(self, value):
+        res = self.get_quality() + value
+        self.item.quality = min(res, 50)
+
+    def decrease_quality_by(self, value):
+        ...
+
+    def reset_quality(self):
+        self.item.quality = 0
+```
+
+## Extract domain computations (3)
+
+```python
+class Strategy:
+    def less_than_ten_days(self):
+        return 5 <= self.item.sell_in < 10
+
+    def less_than_five_days(self):
+        ...
+
+    def out_of_date(self):
+        return self.item.sell_in < 0
+```
+
+## Ditto for update_sell_in
+
+```python
+class Strategy:
+    @abstractmethod
+    def update_sell_in(self):
+        pass
+
+class Legendary:
+    def update_sell_in(self):
+        # Note: override default method
+        pass
+
+class Default:
+    def update_sell_in(self):
+        self.item.sell_in -= 1
+```
+
+
+## Putting it all together
+
+```python
+class GildedRose:
+    def update_items(self):
+        for item in self.items:
+            strategy = get_strategy(item)
+            strategy.update_sell_in()
+            strategy.update_quality()
+```
+
+\vfill
+
+Just 3 lines :)
+
+## TCR
+
+I used really, really small commits,
+you can browse them here:
+
+
+

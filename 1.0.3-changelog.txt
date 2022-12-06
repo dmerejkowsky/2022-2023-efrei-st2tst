@@ -1,0 +1,5 @@
+New in version 1.0.3:
+
+- Display info about the employee before deleting them
+- Fix crash when deleting non-empty team
+- Fix bug when editing second line of address

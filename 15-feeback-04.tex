@@ -1,0 +1,193 @@
+---
+title: Part 15 - Project feedback (1)
+author: Dimitri Merejkowsky
+date: EFREI 2022-2023
+---
+
+# General feedback
+
+## Reminder
+
+Please make sure your team letter appears in the github URL !
+
+Do it now so that you don't forget - don't worry, I'll still have access
+and the old URL will continue to work.
+
+## Reminder (2)
+
+Same thing for the filenames! I got at least 5 "test plan.xlsx"
+
+## On deliveries
+
+One file per delivery, please.
+
+Make sure the log is separated from the rest from now on
+(most of you already did that)
+
+# Test plans
+
+
+## Some good ideas
+
+Have the test runs as different versions of an md file under
+version control :)
+
+Include screenshots
+
+Include videos
+
+Add links from the test plan to the bug tracker
+
+## Careful with images and video
+
+Text takes very little space and is easy to search an index.
+
+This is not the case for images and videos, which take more space
+and are less accessible in general.
+
+## Tests plans in excel
+
+What do *you* think?
+
+## Tests plans in excel
+
+It works but it's not very pleasant.
+
+Many mistakes possible - in real life, manual testers often use a
+dedicated tool.
+
+Need to strike a balance between too much or not enough details for
+manual tests.
+
+# Bug tracker
+
+## Some good ideas
+
+* Include URLs of the pages that present the bug
+
+* Using question marks for "not sure this is a bug" situations
+
+## Titles
+
+What's wrong with this title?
+
+\vfill
+
+> When creating a new team with empty name
+
+## Titles (2)
+
+What's wrong with this title?
+
+\vfill
+
+> Second line doesn't update
+
+## Titles (3)
+
+Let the bug tracker generate issue numbers!
+
+## Titles (4)
+
+![](img/redundant-bug-label.png)
+
+:::incremental
+* What's wrong here?
+* Redundant bug label
+:::
+
+
+## Titles (5)
+
+Lots of ways to phrase it:
+
+\vfill
+
+> Prohibit adding to no team
+
+\vfill
+
+> Crash when adding to non-existing team
+
+\vfill
+
+> Team creation: add a team without value shows traceback
+
+## Issues description
+
+A pattern often used:
+
+```text
+Step to reproduce:
+* Go to the 'teams' page
+* Click on the "delete" button next to a team containing
+  members
+
+Expected:
+All the members of the team now belong to no team
+
+Actual:
+All the members of the team get deleted as well
+```
+
+\vfill
+
+Not mandatory, though.
+
+## Bug lifecycle (1)
+
+```text
+Adresse 2 identique à la 1ère (#4)
+
+* Comment 1
+  2ème ligne identique à la 1ère
+
+* Comment 2
+  Quand on modifie l'adresse 2, il prend la valeur
+  de l'adresse 1 mais si on modifie l'adresse 1,
+  l'adresse 2 n'est pas modifiée
+```
+
+:::incremental
+* What's wrong with those comments?
+* Does not look like they were written by someone who cares
+:::
+
+## Bug lifecycle (2)
+
+```text
+Delete a team with members (#5)
+-------------------------------
+
+* Comment 1
+  The deleting of the team which contains members doesn't work
+  hen we click on the delete button, an 500 error is returned by the
+  server and the team is not deleted.
+
+* Comment 2
+  The team is now deleted, but the employees of the team are also
+  deleted from the database
+```
+
+:::incremental
+* What's wrong with those comments?
+* Missing information version
+:::
+
+## Handling bug lifecycle
+
+When you close a bug, always indicate the version for which it was fixed!
+
+Don't delete closed bugs
+
+## Some advice
+
+Opinion: the simpler the better - looking at you, JIRA.
+
+For instance:
+
+* don't use labels unless you have to
+    * for instance, one label per version is probably overkill
+* don't configure state machines for the workflows
+
+Rationale: if the bug track is to painful to use, it won't be useful.

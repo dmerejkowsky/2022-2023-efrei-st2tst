@@ -40,7 +40,9 @@ Add links from the test plan to the bug tracker
 
 ## Careful with images and video
 
-Text takes very little space and is easy to search an index.
+Text takes very little space and is easy to search and index.
+
+\vfill
 
 This is not the case for images and videos, which take more space
 and are less accessible in general.
@@ -69,11 +71,17 @@ manual tests.
 
 ## Titles
 
-What's wrong with this title?
+## Titles (1)
+
+Don't do that:
+
+```text
+Bug #15 - 14 - cannot demote employee
+```
 
 \vfill
 
-> When creating a new team with empty name
+Let the bug tracker generate issue numbers!
 
 ## Titles (2)
 
@@ -81,23 +89,19 @@ What's wrong with this title?
 
 \vfill
 
-> Second line doesn't update
+> When creating a new team with empty name
 
 ## Titles (3)
 
-Let the bug tracker generate issue numbers!
+What's wrong with this title?
+
+\vfill
+
+> Second line doesn't update
 
 ## Titles (4)
 
-![](img/redundant-bug-label.png)
-
-:::incremental
-* What's wrong here?
-* Redundant bug label
-:::
-
-
-## Titles (5)
+We want both the condition and the nature of the bug
 
 Lots of ways to phrase it:
 
@@ -112,6 +116,17 @@ Lots of ways to phrase it:
 \vfill
 
 > Team creation: add a team without value shows traceback
+
+
+## Titles (5)
+
+![](img/redundant-bug-label.png)
+
+:::incremental
+* What's wrong here?
+* Redundant bug label
+:::
+
 
 ## Issues description
 
@@ -174,7 +189,7 @@ Delete a team with members (#5)
 * Missing information version
 :::
 
-## Handling bug lifecycle
+## Bug lifecycle (3)
 
 When you close a bug, always indicate the version for which it was fixed!
 
@@ -190,4 +205,5 @@ For instance:
     * for instance, one label per version is probably overkill
 * don't configure state machines for the workflows
 
-Rationale: if the bug track is to painful to use, it won't be useful.
+Rationale: if the bug track is too painful to use, it won't be used
+and in the end, useless.
